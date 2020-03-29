@@ -130,5 +130,5 @@ dmypy.json
 
 # Other junk
 .idea/
-.log
-
+*.log
+*.twb
