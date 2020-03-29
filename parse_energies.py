@@ -7,9 +7,8 @@ import datetime
 
 import pandas as pd
 
-
-energies_by_ts_and_type = []
-energies_by_ts = []
+wide = []
+tall = []
 
 for line in fileinput.input():
     if line.startswith("ENERGY:"):
@@ -17,34 +16,32 @@ for line in fileinput.input():
 
         timestep = int(values[0])
 
-        energies_by_ts.append({
+        wide_row = {
             "timestep": timestep,
             "bond [kcal/mol]": float(values[1]),
             "angle [kcal/mol]": float(values[2]),
             "dihedral [kcal/mol]": float(values[3]),
             "improper [kcal/mol]": float(values[4]),
             "electrostatic [kcal/mol]": float(values[5]),
-            "VDW [kcal/mol]": float(values[6])
-        })
+            "VDW [kcal/mol]": float(values[6]),
+            "temp [K]": float(values[11])
+        }
 
-        columns = {}
-        columns["bond"] = float(values[1])
-        columns["angle"] = float(values[2])
-        columns["dihedral"] = float(values[3])
-        columns["improper"] = float(values[4])
-        columns["electrostatic"] = float(values[5])
-        columns["vdw"] = float(values[6])
+        wide.append(wide_row)
 
-        for energy, kcal_mol in columns.items():
-            energies_by_ts_and_type.append({
-                "timestep": timestep,
-                "energy": energy,
-                "kcal/mol": kcal_mol
-            })
-
-energies_by_ts_and_type_df = pd.DataFrame(energies_by_ts_and_type)
-energies_by_ts_df = pd.DataFrame(energies_by_ts)
+        for key, value in wide_row.items():
+            if key != "timestep":
+                tall_row = {
+                    "timestep": timestep,
+                    "measurement": key,
+                    "value": value
+                }
+                tall.append(tall_row)
 
 write_timestamp = round(datetime.datetime.utcnow().timestamp())
-energies_by_ts_df.to_csv(f"energies_by_ts.{write_timestamp}.csv", index=False)
-energies_by_ts_and_type_df.to_csv(f"energies_by_ts_and_type.{write_timestamp}.csv", index=True)
+
+wide_df = pd.DataFrame(wide)
+wide_df.to_csv(f"energies_wide.{write_timestamp}.csv", index=True, index_label="index")
+
+tall_df = pd.DataFrame(tall)
+tall_df.to_csv(f"energies_tall.{write_timestamp}.csv", index=True, index_label="index")
