@@ -3,9 +3,10 @@ This file extracts the energy levels given at each timestep in a NAMD log file
 """
 
 import fileinput
-from sys import stdout
+import datetime
 
 import pandas as pd
+
 
 energies_by_ts_and_type = []
 energies_by_ts = []
@@ -44,5 +45,6 @@ for line in fileinput.input():
 energies_by_ts_and_type_df = pd.DataFrame(energies_by_ts_and_type)
 energies_by_ts_df = pd.DataFrame(energies_by_ts)
 
-energies_by_ts_df.to_csv("energies_by_ts.csv", index=False)
-energies_by_ts_and_type_df.to_csv("energies_by_ts_and_type.csv", index=True)
+write_timestamp = round(datetime.datetime.utcnow().timestamp())
+energies_by_ts_df.to_csv(f"energies_by_ts.{write_timestamp}.csv", index=False)
+energies_by_ts_and_type_df.to_csv(f"energies_by_ts_and_type.{write_timestamp}.csv", index=True)
