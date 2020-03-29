@@ -15,12 +15,12 @@ for line in fileinput.input():
         values = [m for m in [l.strip() for l in line.split(" ")][1:] if len(m) > 0]
         row = {
             "timestep": int(values[0]),
-            "bond [kcal / mol]": float(values[1]),
-            "angle [kcal / mol]": float(values[2]),
-            "dihedral [kcal / mol]": float(values[3]),
-            "improper [kcal / mol]": float(values[4]),
-            "electrostatic [kcal / mol]": float(values[5]),
-            "VDW [kcal / mol]": float(values[6])
+            "bond [kcal/mol]": float(values[1]),
+            "angle [kcal/mol]": float(values[2]),
+            "dihedral [kcal/mol]": float(values[3]),
+            "improper [kcal/mol]": float(values[4]),
+            "electrostatic [kcal/mol]": float(values[5]),
+            "VDW [kcal/mol]": float(values[6])
         }
         rows.append(row)
 
